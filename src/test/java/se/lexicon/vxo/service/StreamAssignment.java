@@ -1,14 +1,19 @@
 package se.lexicon.vxo.service;
 
+import com.fasterxml.jackson.databind.type.CollectionType;
 import org.junit.jupiter.api.Test;
 import se.lexicon.vxo.model.Gender;
 import se.lexicon.vxo.model.Person;
 import se.lexicon.vxo.model.PersonDto;
 
+import java.lang.reflect.Array;
 import java.time.LocalDate;
 import java.time.Period;
+import java.time.chrono.ChronoLocalDate;
 import java.time.format.DateTimeFormatter;
+import java.time.temporal.ChronoUnit;
 import java.util.*;
+import java.util.function.Function;
 import java.util.function.ToIntFunction;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
@@ -257,8 +262,14 @@ public class StreamAssignment {
         int expectedSize = 107;
         Map<String, List<Person>> personMap = null;
 
-        //Write code here
 
+        personMap = people.stream()
+                .collect(Collectors.groupingBy(Person:: getLastName));
+
+
+
+
+System.out.println(personMap.size());
         assertNotNull(personMap);
         assertEquals(expectedSize, personMap.size());
     }
@@ -270,7 +281,14 @@ public class StreamAssignment {
     public void task14(){
         LocalDate[] _2020_dates = null;
 
-        //Write code here
+
+
+        _2020_dates = Stream
+                .iterate(LocalDate.of(2020,1,1), d-> d.plusDays(1))
+                .limit(ChronoUnit.DAYS.between(LocalDate.of(2020,1,1), LocalDate.of(2020,12,31))+1)
+                .collect(Collectors.toList())
+                .toArray(new LocalDate[0]);
+
 
 
         assertNotNull(_2020_dates);
