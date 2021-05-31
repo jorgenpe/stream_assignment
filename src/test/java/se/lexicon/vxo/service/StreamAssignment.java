@@ -48,7 +48,7 @@ public class StreamAssignment {
     public void task2(){
         long amount = 0;
 
-
+        //Using the method count in stream to count all person in people
         amount = people.stream().count();
 
         assertEquals(10000, amount);
@@ -62,6 +62,7 @@ public class StreamAssignment {
         long amount = 0;
         int expected = 90;
 
+        //Using the filter method in stream to filter out all with the last name Andersson
         amount = people.stream().filter(p -> p.getLastName().equalsIgnoreCase("Andersson")).count();
 
 
@@ -76,12 +77,11 @@ public class StreamAssignment {
         int expectedSize = 4988;
         List<Person> females = null;
 
+        //Using filter to extract all females from people and returning them in a list.
         females = people.stream()
-                .filter(person -> person.getGender().equals("FEMALE"))
+                .filter(person -> person.getGender().equals(Gender.FEMALE))
                 .collect(Collectors.toList());
-        expectedSize =(int) people.stream()
-                .filter(person -> person.getGender().equals("FEMALE"))
-                .count();
+
 
         assertNotNull(females);
         assertEquals(expectedSize, females.size());
@@ -95,7 +95,7 @@ public class StreamAssignment {
         int expectedSize = 8882;
         Set<LocalDate> dates = null;
 
-
+        //Using map to extract all birthday an create a TreeSet to store them in.
         dates = people.stream()
                 .map(Person::getDateOfBirth)
                 .collect(Collectors.toCollection((TreeSet::new)));
@@ -114,6 +114,7 @@ public class StreamAssignment {
 
         Person[] result = null;
 
+        // Testing Erik against people by using a filter to find all. Then store them in a list and then transform it to a array
         result = people.stream()
                 .filter(p-> p.getFirstName().equalsIgnoreCase("Erik"))
                 .collect(Collectors.toList()).toArray(new Person[0]);
@@ -131,6 +132,7 @@ public class StreamAssignment {
 
         Optional<Person> optional = null;
 
+        //Using a filter in a stream to find PersonId and create a list. Then create a stream and use method findAny to single out the person with that id.
         optional = people.stream()
                 .filter(p-> p.getPersonId() == 5436)
                 .collect(Collectors.toList())
@@ -151,10 +153,11 @@ public class StreamAssignment {
 
         Optional<Person> optional = null;
 
+        //Finding the oldest person by using method min. Comparing birthday and storing the oldest
         optional = people.stream()
                 .min(Comparator.comparing(p -> p.getDateOfBirth()));
 
-
+        System.out.println(optional.toString());
 
         assertNotNull(optional);
         assertEquals(expectedBirthDate, optional.get().getDateOfBirth());
@@ -170,6 +173,7 @@ public class StreamAssignment {
 
         List<PersonDto> dtoList = null;
 
+        //Filtering birthdate before a specific date. Mapping the result to a new typ of PersonDto and store it as a list of that typ.
         dtoList = people.stream()
                 .filter(person -> person.getDateOfBirth().isBefore(LocalDate.of(1920,1,1)))
                 .map(person -> new PersonDto(person.getPersonId(), person.getFirstName().concat(" " + person.getLastName())))
@@ -192,11 +196,13 @@ public class StreamAssignment {
 
         Optional<String> optional = null;
 
+        // Extract by filtering for a id. Mapping that person and format to birthday of a specific format.A new stream to get the string by using findAny.
         optional = people.stream()
                 .filter(p -> p.getPersonId() == 5914)
                 .map(person -> person.getDateOfBirth().format(DateTimeFormatter.ofPattern("EEEE dd MMMM yyyy")).toUpperCase())
                 .collect(Collectors.toList())
-                .stream().findAny();
+                .stream()
+                .findAny();
 
         System.out.println(optional);
 
@@ -216,7 +222,7 @@ public class StreamAssignment {
         double expected = 54.42;
         double averageAge = 0;
 
-
+        //Using a collect th extract the average age of people. Inside we uses a Collector and one of it's methods that return average of personToAge.
         averageAge = people.stream()
                 .collect(Collectors.averagingInt(personToAge));
 
@@ -235,12 +241,10 @@ public class StreamAssignment {
 
         String[] result = null;
 
-
+        // Using a filter that checks for palindromes and maps the name that is. A New TreeSet is created and the nam is stored there. A transformation to a array done.
         result = people.stream()
                 .filter(p -> p.getFirstName().equalsIgnoreCase(new StringBuilder().append(p.getFirstName()).reverse().toString().trim()))
                 .map(p-> p.getFirstName())
-                .collect(Collectors.toList())
-                .stream()
                 .collect(Collectors.toCollection(TreeSet:: new))
                 .toArray(new String[0]);
 
@@ -262,7 +266,7 @@ public class StreamAssignment {
         int expectedSize = 107;
         Map<String, List<Person>> personMap = null;
 
-
+        //Using a collect to create a map<String,List<Person>> by using the method groupingBy that returns a map of that typ. It iterates over all person and stores every unique last name
         personMap = people.stream()
                 .collect(Collectors.groupingBy(Person:: getLastName));
 
@@ -282,7 +286,7 @@ System.out.println(personMap.size());
         LocalDate[] _2020_dates = null;
 
 
-
+        //Iterate from a start date and steps one day forward at a time. A limit is set by days between and stored in a list that is transformed into a array
         _2020_dates = Stream
                 .iterate(LocalDate.of(2020,1,1), d-> d.plusDays(1))
                 .limit(ChronoUnit.DAYS.between(LocalDate.of(2020,1,1), LocalDate.of(2020,12,31))+1)
