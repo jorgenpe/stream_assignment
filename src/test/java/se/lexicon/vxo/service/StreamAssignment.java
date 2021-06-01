@@ -293,6 +293,9 @@ System.out.println(personMap.size());
                 .collect(Collectors.toList())
                 .toArray(new LocalDate[0]);
 
+        for(LocalDate m: _2020_dates){
+            System.out.println(m.toString());
+        }
 
 
         assertNotNull(_2020_dates);
